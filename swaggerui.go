@@ -35,8 +35,8 @@ func (s *swagWrapFS) Open(name string) (fs.File, error) {
 	return s.static.Open(name)
 }
 
-// NewHandler returns a new handler that will serve swagger-ui with your spec
-func NewHandler(spec []byte, spectype SpecType) http.Handler {
+// Handler returns a handler that will serve a self-hosted Swagger UI with your spec embedded
+func Handler(spec []byte, spectype SpecType) http.Handler {
 	//render the index template with the proper spec name inserted
 	static, _ := fs.Sub(swagfs, "embed")
 	tmpl, _ := template.ParseFS(static, "index.html")
