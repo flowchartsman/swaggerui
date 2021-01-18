@@ -21,7 +21,7 @@ var spec []byte
 
 func main() {
 	log.SetFlags(0)
-	http.Handle("/swagger/", http.StripPrefix("/swagger", swaggerui.sHandler(spec, swaggerui.SpecTypeJSON)))
+	http.Handle("/swagger/", http.StripPrefix("/swagger", swaggerui.Handler(spec, swaggerui.SpecTypeJSON)))
 	log.Println("serving on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
