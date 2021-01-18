@@ -1,5 +1,5 @@
 # swaggerui
-Embedded, self-hosted [Swagger Ui[(https://swagger.io/tools/swagger-ui/) for go servers
+Embedded, self-hosted [Swagger Ui](https://swagger.io/tools/swagger-ui/) for go servers
 
 This module provides `swaggerui.Handler`, which you can use to serve an embedded copy of [Swagger UI](https://swagger.io/tools/swagger-ui/) as well as an embedded specification for your API.
 
