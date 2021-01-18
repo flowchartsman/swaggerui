@@ -1,4 +1,5 @@
-// This program downloads and compresses the dist assets for the current swagger-ui version and places them into the embed directory
+// This program downloads the dist assets for the current swagger-ui version and places them into the embed directory
+// TODO: Compress?
 
 // +build ignore
 
