@@ -9,6 +9,8 @@ import (
 	"testing/fstest"
 )
 
+//go:generate go run generate.go
+
 //go:embed embed
 var swagfs embed.FS
 
