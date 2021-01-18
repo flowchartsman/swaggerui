@@ -121,5 +121,5 @@ func main() {
 	}
 	defer newcv.Close()
 	newcv.WriteString(tag)
-	log.Printf("updated swaggerui from %s => %s, please check templated index.hml and retag repo", cv, tag)
+	log.Printf("updated swaggerui from %s => %s, please check templated index.html and retag repo", cv, tag)
 }
