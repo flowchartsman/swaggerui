@@ -102,7 +102,7 @@ func main() {
 			}
 		}
 	}
-	// replace the hard-coded JSON file with template directive
+	// replace the hard-coded JSON file with a generic file
 	idxFile, err := os.ReadFile(filepath.Join("embed", "index.html"))
 	if err != nil {
 		log.Fatalf("error opening index.html for templating :%v", err)
