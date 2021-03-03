@@ -21,7 +21,7 @@ import (
 )
 
 type releaseResp []struct {
-	//TagName is a release tag name
+	// TagName is a release tag name
 	TagName string `json:"tag_name"`
 }
 
@@ -104,7 +104,7 @@ func main() {
 	newidx := strings.Replace(
 		string(idxFile),
 		`url: "https://petstore.swagger.io/v2/swagger.json"`,
-		`url: "./swagger.{{.SpecType}}"`,
+		`url: "./swagger_spec"`,
 		-1,
 	)
 	newidxFile, err := os.Create(filepath.Join("embed", "index.html"))
