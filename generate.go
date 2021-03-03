@@ -103,7 +103,7 @@ func main() {
 		}
 	}
 	// replace the hard-coded JSON file with template directive
-	idxFile, err := ioutil.ReadFile(filepath.Join("embed", "index.html"))
+	idxFile, err := os.ReadFile(filepath.Join("embed", "index.html"))
 	if err != nil {
 		log.Fatalf("error opening index.html for templating :%v", err)
 	}
