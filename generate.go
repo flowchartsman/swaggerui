@@ -72,6 +72,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("error opening file as gzip: %v", err)
 	}
+	if err := os.RemoveAll("embed"); err != nil {
+		log.Fatalf("error removing old embed directory")
+	}
+	if err := os.Mkdir("embed", 0o700); err != nil {
+		log.Fatalf("error recreating embed directory")
+	}
 	tr := tar.NewReader(zr)
 	for {
 		header, err := tr.Next()
