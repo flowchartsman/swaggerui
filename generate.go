@@ -10,13 +10,16 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -49,7 +52,12 @@ func main() {
 
 	current, err := ioutil.ReadFile("current_version.txt")
 	if err != nil {
-		log.Fatalf("unable to check version in current_version.txt: %v", err)
+		switch {
+		case errors.Is(err, fs.ErrNotExist):
+			// no problem, just do it
+		default:
+			log.Fatalf("unable to check version in current_version.txt: %v", err)
+		}
 	}
 	cv := string(bytes.TrimRight(current, "\n"))
 
@@ -102,24 +110,30 @@ func main() {
 			}
 		}
 	}
-	// replace the hard-coded JSON file with a generic file
-	idxFile, err := os.ReadFile(filepath.Join("embed", "index.html"))
+	// replace the hard-coded JSON file with a generic file and disable the topbar
+	initFile, err := os.ReadFile(filepath.Join("embed", "swagger-initializer.js"))
 	if err != nil {
-		log.Fatalf("error opening index.html for templating :%v", err)
+		log.Fatalf("error opening swagger-initializer.js for templating :%v", err)
 	}
-	newidx := strings.Replace(
-		string(idxFile),
-		`url: "https://petstore.swagger.io/v2/swagger.json"`,
-		`url: "./swagger_spec"`,
-		-1,
-	)
-	newidxFile, err := os.Create(filepath.Join("embed", "index.html"))
+	// replace the url
+	//newInit := strings.Replace(
+	//string(initFile),
+	//`url: "https://petstore.swagger.io/v2/swagger.json"`,
+	//`url: "./swagger_spec"`,
+	//-1,
+	//)
+	newInit := regexp.MustCompile(`url:\s+"[^"]*"`).ReplaceAllLiteral(initFile, []byte(`url: "./swagger_spec"`))
+	newInit = regexp.MustCompile(`,?\s+SwaggerUIStandalonePreset.*\n`).ReplaceAllLiteral(newInit, []byte("\n"))
+	newInit = regexp.MustCompile(`(?s),\s+plugins: \[.*],\n`).ReplaceAllLiteral(newInit, []byte("\n"))
+	newInit = regexp.MustCompile(`\n\s*layout:.*\n`).ReplaceAllLiteral(newInit, []byte("\n"))
+	//fmt.Println(string(newInit))
+	newinitFile, err := os.Create(filepath.Join("embed", "swagger-initializer.js"))
 	if err != nil {
-		log.Fatalf("error re-creating index.html file: %v", err)
+		log.Fatalf("error re-creating swagger-initializer.js file: %v", err)
 	}
-	defer newidxFile.Close()
-	if _, err := newidxFile.WriteString(newidx); err != nil {
-		log.Fatalf("unable to write to index.html: %v", err)
+	defer newinitFile.Close()
+	if _, err := newinitFile.Write(newInit); err != nil {
+		log.Fatalf("unable to write to swagger-initializer.js: %v", err)
 	}
 	newcv, err := os.Create("current_version.txt")
 	if err != nil {
@@ -127,5 +141,5 @@ func main() {
 	}
 	defer newcv.Close()
 	newcv.WriteString(tag)
-	log.Printf("updated swaggerui from %s => %s, please check templated index.html and retag repo", cv, tag)
+	log.Printf("updated swaggerui from %s => %s, please check templated swagger-initializer.js and retag repo", cv, tag)
 }

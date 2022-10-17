@@ -1,0 +1,112 @@
+---
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Simple Petstore
+  description: This is an example of embedded spec served with API using flowchartsman/swaggerui
+paths:
+  '/pet/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+        - pet
+      summary: Update a pet
+      description: This operation will update a pet in the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Pet updated
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/ApiResponse'
+        '404':
+          description: Pet not found
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid id or pet object
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/ApiResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/ApiResponse'
+      security:
+        - ApiKey: []
+    get:
+      tags:
+        - pet
+      summary: Find a pet
+      description: This operation will find a pet in the database.
+      responses:
+        '200':
+          description: pet retrieval
+          content:
+            application/json:
+              schema:
+                '$ref': '#components/schemas/Pet'
+        '404':
+          description: Pet not found
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid id
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/ApiResponse'
+      security: []
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    Pet:
+      type: object
+      required:
+        - name
+        - pet_type
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          default: 0
+          example: 1
+        name:
+          type: string
+          example: francine
+        pet_type:
+          type: string
+          example: shark
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
