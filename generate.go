@@ -1,6 +1,7 @@
 // This program downloads the dist assets for the current swagger-ui version and places them into the embed directory
 // TODO: Compress?
 
+//go:build ignore
 // +build ignore
 
 package main
@@ -119,10 +120,10 @@ func main() {
 	//newInit := strings.Replace(
 	//string(initFile),
 	//`url: "https://petstore.swagger.io/v2/swagger.json"`,
-	//`url: "./swagger_spec"`,
+	//`url: "./swagger.json"`,
 	//-1,
 	//)
-	newInit := regexp.MustCompile(`url:\s+"[^"]*"`).ReplaceAllLiteral(initFile, []byte(`url: "./swagger_spec"`))
+	newInit := regexp.MustCompile(`url:\s+"[^"]*"`).ReplaceAllLiteral(initFile, []byte(`url: "./swagger.json"`))
 	newInit = regexp.MustCompile(`,?\s+SwaggerUIStandalonePreset.*\n`).ReplaceAllLiteral(newInit, []byte("\n"))
 	newInit = regexp.MustCompile(`(?s),\s+plugins: \[.*],\n`).ReplaceAllLiteral(newInit, []byte("\n"))
 	newInit = regexp.MustCompile(`\n\s*layout:.*\n`).ReplaceAllLiteral(newInit, []byte("\n"))

@@ -22,7 +22,7 @@ func Handler(spec []byte) http.Handler {
 	// render the index template with the proper spec name inserted
 	static, _ := fs.Sub(swagfs, "embed")
 	mux := http.NewServeMux()
-	mux.HandleFunc("/swagger_spec", byteHandler(spec))
+	mux.HandleFunc("/swagger.json", byteHandler(spec))
 	mux.Handle("/", http.FileServer(http.FS(static)))
 	return mux
 }
